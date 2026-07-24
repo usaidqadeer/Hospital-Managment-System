@@ -23,9 +23,14 @@ app = FastAPI(
 # =========================
 # CORS Middleware
 # =========================
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],      # Development کے لیے
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,18 +39,15 @@ app.add_middleware(
 # =========================
 # Include Routers
 # =========================
-
 app.include_router(auth.router)
 app.include_router(doctor.router)
 app.include_router(patient.router)
 app.include_router(appointment.router)
 app.include_router(dashboard.router)
 
-
 # =========================
 # Home API
 # =========================
-
 @app.get("/")
 def home():
     return {
