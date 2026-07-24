@@ -8,7 +8,10 @@ from routers.doctor import router as doctors_router
 from routers.patient import router as patients_router
 from routers.appointment import router as appointments_router
 
+
+# Create database tables
 Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI(
     title="Hospital Management System API",
@@ -16,6 +19,8 @@ app = FastAPI(
     description="Hospital Management System Backend using FastAPI",
 )
 
+
+# CORS configuration
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
@@ -29,29 +34,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(
-    auth_router,
-    prefix="/auth",
-    tags=["Authentication"],
-)
 
-app.include_router(
-    doctors_router,
-    prefix="/doctors",
-    tags=["Doctors"],
-)
+# Routers
+# Router files already contain their own prefixes
+app.include_router(auth_router)
+app.include_router(doctors_router)
+app.include_router(patients_router)
+app.include_router(appointments_router)
 
-app.include_router(
-    patients_router,
-    prefix="/patients",
-    tags=["Patients"],
-)
-
-app.include_router(
-    appointments_router,
-    prefix="/appointments",
-    tags=["Appointments"],
-)
 
 @app.get("/")
 def root():
@@ -60,6 +50,7 @@ def root():
         "message": "Hospital Management System API is running successfully",
         "docs": "/docs",
     }
+
 
 @app.get("/health")
 def health_check():
